@@ -13,6 +13,8 @@
         android:theme="@style/Theme.MilionarSemestralka"
         tools:targetApi="31">
 
+        <activity android:name=".HotSeatActivity" />
+        <activity android:name=".PrizeLadderActivity" />
         <activity
             android:name=".StartActivity"
             android:exported="true"
@@ -20,10 +22,11 @@
             android:theme="@style/Theme.MilionarSemestralka">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
     </application>
 
 </manifest>
