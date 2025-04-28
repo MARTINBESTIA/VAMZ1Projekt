@@ -70,12 +70,11 @@ fun HotSeatLayout(modifier: Modifier = Modifier) {
             )
             Text(
                 text = "Otázka",
+                color = androidx.compose.ui.graphics.Color.White,
+                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
                 modifier = Modifier
                     .align(Alignment.Center)
             )
         }
-
-
     }
-
 }

@@ -51,7 +51,7 @@ class StartActivity : ComponentActivity() {
                     )
                 }
             }
-            LadderActivityTransition();
+            //LadderActivityTransition();
         }
     }
 }
@@ -118,94 +118,124 @@ fun Buttons(modifier: Modifier = Modifier) {
                     .fillMaxWidth(1f)
                     .fillMaxHeight(0.3f)
             )
-        }
-        Spacer(modifier = Modifier.height(150.dp))
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceEvenly,
-
-        ) {/*
-            Image(
-                painter = buttonImage,
-                contentDescription = null,
-                modifier = buttonModifier
-            )
-            Text(text = "Button 1", modifier = buttonModifier, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-            */
-            Button(
-                onClick = { /* handle click */ },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .scale(1.5f),
-                content = {
-                    Image(
-                        painter = painterResource(R.drawable.menubutton),
-                        contentDescription = null,
-                        modifier = Modifier,
-                        contentScale = ContentScale.FillBounds
-                    )
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent
-                )
-            )
-
             Spacer(modifier = Modifier.height(50.dp))
-            Button(
-                onClick = { /* handle click */ },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .scale(1.5f),
-                content = {
-                    Image(
-                        painter = painterResource(R.drawable.menubutton),
-                        contentDescription = null,
-                        modifier = Modifier,
-                        contentScale = ContentScale.FillBounds
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceEvenly,
+
+
+                ) {
+                Box (
+                    modifier = Modifier
+                ) {
+                    Button(
+                        onClick = { /* handle click */ },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .scale(1.5f),
+                        content = {
+                            Image(
+                                painter = painterResource(R.drawable.menubutton),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .fillMaxWidth(0.9f)
+                                    .aspectRatio(8.5f),
+                                contentScale = ContentScale.FillBounds
+                            )
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent
+                        )
                     )
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent
-                )
-            )
-            Spacer(modifier = Modifier.height(50.dp))
-            Button(
-                onClick = { /* handle click */ },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .scale(1.5f),
-                content = {
-                    Image(
-                        painter = painterResource(R.drawable.menubutton),
-                        contentDescription = null,
-                        modifier = Modifier,
-                        contentScale = ContentScale.FillBounds
+                    Text(
+                        text = "START GAME",
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        modifier = Modifier.align(Alignment.Center)
                     )
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent
-                )
-            )
+                }
+
+                Spacer(modifier = Modifier.height(25.dp))
+                Box (
+                    modifier = Modifier
+                ) {
+                    Button(
+                        onClick = { /* handle click */ },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .scale(1.5f),
+                        content = {
+                            Image(
+                                painter = painterResource(R.drawable.menubutton),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .fillMaxWidth(0.9f)
+                                    .aspectRatio(8.5f),
+                                contentScale = ContentScale.FillBounds
+                            )
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent
+                        )
+                    )
+                    Text(
+                        text = "OPTIONS",
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+                Spacer(modifier = Modifier.height(25.dp))
+                Box (
+                    modifier = Modifier
+                ) {
+                    Button(
+                        onClick = { System.exit(0) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .scale(1.5f),
+                        content = {
+                            Image(
+                                painter = painterResource(R.drawable.menubutton),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .fillMaxWidth(0.9f)
+                                    .aspectRatio(8.5f),
+                                contentScale = ContentScale.FillBounds
+                            )
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent
+                        )
+                    )
+                    Text(
+                        text = "QUIT GAME",
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+            }
         }
     }
 }
 
 
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
 @Composable
 fun LadderActivityTransition() {
+    val context = LocalContext.current
+    val intent = Intent(context, PrizeLadderActivity::class.java)
+    context.startActivity(intent)
+
+}
+@Composable
+fun HotSeatActivityTransition() {
     val context = LocalContext.current
     val intent = Intent(context, HotSeatActivity::class.java)
     context.startActivity(intent)
 
 }
-
