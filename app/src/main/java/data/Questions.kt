@@ -14,6 +14,6 @@ data class Questions(
     val difficulty: Int,
     val correctAnswer: Char,
     val sector: Int,
-    val alreadyShowed: Boolean
+    var alreadyShowed: Boolean
 )
 

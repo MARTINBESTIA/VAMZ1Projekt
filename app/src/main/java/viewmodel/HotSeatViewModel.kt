@@ -1,5 +1,7 @@
 package viewmodel
 
-class HotSeatViewModel {
+import androidx.lifecycle.ViewModel
+
+class HotSeatViewModel : ViewModel(){
 
 }

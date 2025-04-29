@@ -51,7 +51,6 @@ class StartActivity : ComponentActivity() {
                     )
                 }
             }
-            //LadderActivityTransition();
         }
     }
 }
@@ -94,6 +93,7 @@ fun LogoImage(modifier: Modifier = Modifier) {
 
 @Composable
 fun Buttons(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
     val buttonImage = painterResource(R.drawable.menubutton)
     val logoImage = painterResource(R.drawable.logo)
     val buttonModifier = Modifier
@@ -130,7 +130,10 @@ fun Buttons(modifier: Modifier = Modifier) {
                     modifier = Modifier
                 ) {
                     Button(
-                        onClick = { /* handle click */ },
+                        onClick = {
+                            val intent = Intent(context, PrizeLadderActivity::class.java)
+                            context.startActivity(intent)
+                                  },
                         modifier = Modifier
                             .fillMaxWidth()
                             .scale(1.5f),
@@ -225,13 +228,6 @@ fun Buttons(modifier: Modifier = Modifier) {
 }
 
 
-@Composable
-fun LadderActivityTransition() {
-    val context = LocalContext.current
-    val intent = Intent(context, PrizeLadderActivity::class.java)
-    context.startActivity(intent)
-
-}
 @Composable
 fun HotSeatActivityTransition() {
     val context = LocalContext.current
