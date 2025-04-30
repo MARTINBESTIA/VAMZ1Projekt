@@ -49,6 +49,7 @@ class StartActivity : ComponentActivity() {
                     Buttons(
                         modifier = Modifier.padding(outerPadding)
                     )
+                   HotSeatActivityTransition()
                 }
             }
         }
@@ -123,8 +124,6 @@ fun Buttons(modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceEvenly,
-
-
                 ) {
                 Box (
                     modifier = Modifier
