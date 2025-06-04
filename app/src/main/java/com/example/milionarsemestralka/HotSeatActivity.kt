@@ -28,7 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import data.QuestionProcessor
+import domain.QuestionProcessor
 
 class HotSeatActivity : androidx.activity.ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,12 +82,16 @@ fun HotSeatLayout(modifier: Modifier = Modifier) {
                     modifier = Modifier
                         .fillMaxWidth(0.9f)
                         .aspectRatio(1f)
+                        .align(Alignment.Center)
                 )
                 Text(
                     text = "Otázka",
                     color = androidx.compose.ui.graphics.Color.White,
                     fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                    fontSize = 24.sp,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                     modifier = Modifier
+                        .fillMaxWidth(0.78f)
                         .align(Alignment.Center)
                 )
             }

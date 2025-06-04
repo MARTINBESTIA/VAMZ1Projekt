@@ -1,6 +1,7 @@
 package data
 
 import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 
@@ -14,5 +15,8 @@ interface QuestionDao {
 
     @Query("Update questions SET alreadyShowed = 'N' WHERE difficulty = :difficulty" )
     suspend fun resetQuestionsUnread(difficulty: Int)
+
+    @Insert
+    suspend fun insertAllQuestions(vararg questions: Questions)
 
 }

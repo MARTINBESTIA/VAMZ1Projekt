@@ -2,24 +2,42 @@ package com.example.milionarsemestralka
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalDensity
+import domain.GameSessionController
 
 class PrizeLadderActivity : androidx.activity.ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +51,7 @@ class PrizeLadderActivity : androidx.activity.ComponentActivity() {
                     .padding(outerPadding)
                     .fillMaxSize()
                 )
+                MovingRectangleScreen()
             }
         }
     }
@@ -103,3 +122,57 @@ fun ButtonsLayout(modifier: Modifier = Modifier) {
 
     }
 }
+
+@Composable
+fun MovingRectangleScreen() {
+    val configuration = LocalConfiguration.current
+    val density = LocalDensity.current
+    val screenHeightPx = with(density) { configuration.screenHeightDp.dp.toPx() }
+
+    val offsetX = remember { Animatable(0f) }
+    val offsetY = remember { Animatable(screenHeightPx - screenHeightPx * ((GameSessionController.currentLevel - 1) / 15f) - 160)}
+    val alphaAnim = remember { Animatable(0f) }
+
+    LaunchedEffect(screenHeightPx) {
+
+        offsetY.animateTo(
+            targetValue = -(screenHeightPx * (GameSessionController.currentLevel / 15f) - 160),
+            animationSpec = tween(durationMillis = 1000, easing = LinearOutSlowInEasing)
+        )
+
+        repeat(3) {
+            alphaAnim.animateTo(
+                targetValue = 0.1f,
+                animationSpec = tween(durationMillis = 500)
+            )
+            alphaAnim.animateTo(
+                targetValue = 0.5f,
+                animationSpec = tween(durationMillis = 500)
+            )
+        }
+    }
+
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(80.dp)
+                .alpha(alphaAnim.value)
+                .align(Alignment.BottomCenter)
+                .offset { IntOffset(offsetX.value.toInt(), offsetY.value.toInt()) }
+                .background(Color.Yellow)
+                .shadow(
+                    elevation = 10.dp,
+                    shape = RoundedCornerShape(50.dp),
+                    clip = false
+                )
+        )
+    }
+}
+
+
+
+

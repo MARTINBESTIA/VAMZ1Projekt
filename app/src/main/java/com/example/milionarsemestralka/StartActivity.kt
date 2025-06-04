@@ -226,11 +226,10 @@ fun Buttons(modifier: Modifier = Modifier) {
     }
 }
 
-
 @Composable
 fun HotSeatActivityTransition() {
     val context = LocalContext.current
     val intent = Intent(context, HotSeatActivity::class.java)
     context.startActivity(intent)
-
 }
+

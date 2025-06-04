@@ -1,4 +1,7 @@
-package data
+package domain
+
+import data.QuestionDao
+import data.Questions
 
 class QuestionProcessor(private val questionDao: QuestionDao, private val difficulty: Int, private val sector: Int) {
 
@@ -10,7 +13,9 @@ class QuestionProcessor(private val questionDao: QuestionDao, private val diffic
             questionDao.resetQuestionsUnread(difficulty)
             currentQuestion = questionDao.getRandomUnshownQuestion(difficulty, sector)
         }
-        questionDao.updateQuestion(currentQuestion)
+        if (currentQuestion != null) {
+            currentQuestion?.alreadyShowed = true
+        }
         return currentQuestion
     }
     fun getCorrectAnswer(): Char? {
