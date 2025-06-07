@@ -19,11 +19,16 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -52,8 +57,11 @@ class PrizeLadderActivity : androidx.activity.ComponentActivity() {
                     .padding(outerPadding)
                     .fillMaxSize()
                 )
-                MovingRectangleScreen()
-                GoToHotSeatActivity(LocalContext.current)
+                EndGameDialog()
+                if (GameSessionController.stillInGame.value) {
+                    MovingRectangleScreen()
+                    GoToHotSeatActivity(LocalContext.current)
+                }
             }
         }
     }
@@ -185,6 +193,35 @@ fun GoToHotSeatActivity(context: Context) {
         context.startActivity(intent)
     }
 }
+
+@Composable
+fun EndGameDialog() {
+    val isInGame = GameSessionController.stillInGame.value
+    val context = LocalContext.current
+    val prizes = intArrayOf(500, 1000, 2000, 3000, 5000, 7500, 10000, 12500, 15000, 25000, 50000, 100000, 250000, 500000, 1000000)
+
+    if (!isInGame) {
+        AlertDialog(
+            onDismissRequest = {
+                val intent = Intent(context, StartActivity::class.java)
+                context.startActivity(intent)
+            },
+            title = { Text(text = "You are the winner!") },
+            text = {
+                Text("Congratulations! You won ${prizes[GameSessionController.currentLevel - 1]} €")
+            },
+            confirmButton = {
+                Button(onClick = {
+                    val intent = Intent(context, StartActivity::class.java)
+                    context.startActivity(intent)
+                }) {
+                    Text("OK")
+                }
+            }
+        )
+    }
+}
+
 
 
 

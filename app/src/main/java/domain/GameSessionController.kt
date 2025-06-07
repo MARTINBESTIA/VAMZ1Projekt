@@ -1,11 +1,14 @@
 package domain
 
+import androidx.compose.runtime.mutableStateOf
+
 object GameSessionController {
     var currentLevel: Int = 1
     var isFiftyFiftyUsed: Boolean = false
     var isAudienceHelpUsed: Boolean = false
     var isStatisticsHelpUsed: Boolean = false
-    var stillInGame: Boolean = true
+    var stillInGame = mutableStateOf(true)
+        private set
 
     fun nextLevel() {
         if (currentLevel < 15) currentLevel++
@@ -24,7 +27,7 @@ object GameSessionController {
     }
 
     fun endGame() {
-        stillInGame = false
+        stillInGame.value = false
     }
 
     fun resetGame() {
@@ -32,6 +35,6 @@ object GameSessionController {
         isFiftyFiftyUsed = false
         isAudienceHelpUsed = false
         isStatisticsHelpUsed = false
-        stillInGame = true
+        stillInGame.value = true
     }
 }
