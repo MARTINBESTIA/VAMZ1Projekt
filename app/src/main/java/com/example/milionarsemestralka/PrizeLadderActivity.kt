@@ -53,7 +53,7 @@ class PrizeLadderActivity : androidx.activity.ComponentActivity() {
                     .fillMaxSize()
                 )
                 MovingRectangleScreen()
-                goToHotSeatActivity(LocalContext.current)
+                GoToHotSeatActivity(LocalContext.current)
             }
         }
     }
@@ -178,7 +178,7 @@ fun MovingRectangleScreen() {
 }
 
 @Composable
-fun goToHotSeatActivity(context: Context) {
+fun GoToHotSeatActivity(context: Context) {
     LaunchedEffect(Unit) {
         delay(5000) // Wait for 5 seconds
         val intent = Intent(context, HotSeatActivity::class.java)

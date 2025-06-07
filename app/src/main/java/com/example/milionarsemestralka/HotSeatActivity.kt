@@ -1,5 +1,6 @@
 package com.example.milionarsemestralka
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -19,19 +20,31 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.lifecycleScope
 import data.AppDatabase
+import domain.GameSessionController
 import domain.QuestionProcessor
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
 
 class HotSeatActivity : androidx.activity.ComponentActivity() {
     private lateinit var questionProcessor: QuestionProcessor
@@ -73,8 +86,56 @@ fun HotSeatBg(modifier: Modifier = Modifier) {
     )
 }
 
+
+
 @Composable
 fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProcessor) {
+    val context = LocalContext.current
+
+    val answered = remember { mutableStateOf(false) }
+    val buttonColorA = remember { mutableStateOf<ColorFilter?>(null) }
+    val buttonColorB = remember { mutableStateOf<ColorFilter?>(null) }
+    val buttonColorC = remember { mutableStateOf<ColorFilter?>(null) }
+    val buttonColorD = remember { mutableStateOf<ColorFilter?>(null) }
+
+    val scope = rememberCoroutineScope()
+
+    fun handleAnswerClick(answer: Char, questionProcessor: QuestionProcessor) {
+        if (answered.value) return
+        answered.value = true
+
+        if (answer == questionProcessor.getCorrectAnswer()) {
+            when (answer) {
+                'A' -> buttonColorA.value = ColorFilter.tint(Color.Green)
+                'B' -> buttonColorB.value = ColorFilter.tint(Color.Green)
+                'C' -> buttonColorC.value = ColorFilter.tint(Color.Green)
+                'D' -> buttonColorD.value = ColorFilter.tint(Color.Green)
+            }
+            GameSessionController.nextLevel()
+        } else {
+            when (questionProcessor.getCorrectAnswer()) {
+                'A' -> buttonColorA.value = ColorFilter.tint(Color.Green)
+                'B' -> buttonColorB.value = ColorFilter.tint(Color.Green)
+                'C' -> buttonColorC.value = ColorFilter.tint(Color.Green)
+                'D' -> buttonColorD.value = ColorFilter.tint(Color.Green)
+            }
+            when (answer) {
+                'A' -> buttonColorA.value = ColorFilter.tint(Color.Red)
+                'B' -> buttonColorB.value = ColorFilter.tint(Color.Red)
+                'C' -> buttonColorC.value = ColorFilter.tint(Color.Red)
+                'D' -> buttonColorD.value = ColorFilter.tint(Color.Red)
+            }
+            GameSessionController.endGame()
+        }
+
+        // Delay then navigate
+        scope.launch {
+            kotlinx.coroutines.delay(1500L)
+            val intent = Intent(context, PrizeLadderActivity::class.java)
+            context.startActivity(intent)
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -98,10 +159,10 @@ fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProc
                 )
                 Text(
                     text = questionProcessor.getQuestion()!!,
-                    color = androidx.compose.ui.graphics.Color.White,
-                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
                     fontSize = 24.sp,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth(0.78f)
                         .align(Alignment.Center)
@@ -112,7 +173,7 @@ fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProc
                 modifier = Modifier
             ) {
                 Button(
-                    onClick = { /* handle click */ },
+                    onClick = { handleAnswerClick('A', questionProcessor) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .scale(1.5f),
@@ -123,12 +184,14 @@ fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProc
                             modifier = Modifier
                                 .fillMaxWidth(0.7f)
                                 .aspectRatio(8.5f),
-                            contentScale = ContentScale.FillBounds
+                            contentScale = ContentScale.FillBounds,
+                            colorFilter = buttonColorA.value
                         )
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Transparent
-                    )
+                    ),
+                    enabled = !answered.value
                 )
                 Text(
                     text = "A.",
@@ -139,7 +202,7 @@ fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProc
                 )
                 Text(
                     text = questionProcessor.getAnswerA()!!,
-                    fontSize = 30.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
                     modifier = Modifier.align(Alignment.Center)
@@ -150,7 +213,7 @@ fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProc
                 modifier = Modifier
             ) {
                 Button(
-                    onClick = { /* handle click */ },
+                    onClick = { handleAnswerClick('B', questionProcessor) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .scale(1.5f),
@@ -161,12 +224,14 @@ fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProc
                             modifier = Modifier
                                 .fillMaxWidth(0.7f)
                                 .aspectRatio(8.5f),
-                            contentScale = ContentScale.FillBounds
+                            contentScale = ContentScale.FillBounds,
+                            colorFilter = buttonColorB.value
                         )
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Transparent
-                    )
+                    ),
+                    enabled = !answered.value
                 )
                 Text(
                     text = "B.",
@@ -177,10 +242,10 @@ fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProc
                 )
                 Text(
                     text = questionProcessor.getAnswerB()!!,
-                    fontSize = 30.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
-                    modifier = Modifier.align(Alignment.Center)
+                    modifier = Modifier.align(Alignment.Center),
                 )
             }
             Spacer(modifier = Modifier.height(25.dp))
@@ -188,7 +253,7 @@ fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProc
                 modifier = Modifier
             ) {
                 Button(
-                    onClick = { /* handle click */ },
+                    onClick = { handleAnswerClick('C', questionProcessor) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .scale(1.5f),
@@ -199,12 +264,14 @@ fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProc
                             modifier = Modifier
                                 .fillMaxWidth(0.7f)
                                 .aspectRatio(8.5f),
-                            contentScale = ContentScale.FillBounds
+                            contentScale = ContentScale.FillBounds,
+                            colorFilter = buttonColorC.value
                         )
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Transparent
-                    )
+                    ),
+                    enabled = !answered.value
                 )
                 Text(
                     text = "C.",
@@ -215,7 +282,7 @@ fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProc
                 )
                 Text(
                     text = questionProcessor.getAnswerC()!!,
-                    fontSize = 30.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
                     modifier = Modifier.align(Alignment.Center)
@@ -226,7 +293,7 @@ fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProc
                 modifier = Modifier
             ) {
                 Button(
-                    onClick = { /* handle click */ },
+                    onClick = { handleAnswerClick('D', questionProcessor) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .scale(1.5f),
@@ -237,12 +304,14 @@ fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProc
                             modifier = Modifier
                                 .fillMaxWidth(0.7f)
                                 .aspectRatio(8.5f),
-                            contentScale = ContentScale.FillBounds
+                            contentScale = ContentScale.FillBounds,
+                            colorFilter = buttonColorD.value
                         )
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Transparent
-                    )
+                    ),
+                    enabled = !answered.value
                 )
                 Text(
                     text = "D.",
@@ -253,7 +322,7 @@ fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProc
                 )
                 Text(
                     text = questionProcessor.getAnswerD()!!,
-                    fontSize = 30.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
                     modifier = Modifier.align(Alignment.Center)
@@ -362,3 +431,6 @@ fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProc
         }
     }
 }
+
+
+
