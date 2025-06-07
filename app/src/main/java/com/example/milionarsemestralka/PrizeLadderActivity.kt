@@ -1,9 +1,10 @@
 package com.example.milionarsemestralka
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -16,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
@@ -27,17 +27,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalDensity
 import domain.GameSessionController
+import kotlinx.coroutines.delay
 
 class PrizeLadderActivity : androidx.activity.ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,10 +53,13 @@ class PrizeLadderActivity : androidx.activity.ComponentActivity() {
                     .fillMaxSize()
                 )
                 MovingRectangleScreen()
+                goToHotSeatActivity(LocalContext.current)
             }
         }
     }
 }
+
+
 @Composable
 fun PrizeLadderBg(modifier: Modifier = Modifier) {
     val image = painterResource(R.drawable.backgroundmain)
@@ -150,8 +154,8 @@ fun MovingRectangleScreen() {
                 animationSpec = tween(durationMillis = 500)
             )
         }
-    }
 
+    }
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -173,6 +177,14 @@ fun MovingRectangleScreen() {
     }
 }
 
+@Composable
+fun goToHotSeatActivity(context: Context) {
+    LaunchedEffect(Unit) {
+        delay(5000) // Wait for 5 seconds
+        val intent = Intent(context, HotSeatActivity::class.java)
+        context.startActivity(intent)
+    }
+}
 
 
 

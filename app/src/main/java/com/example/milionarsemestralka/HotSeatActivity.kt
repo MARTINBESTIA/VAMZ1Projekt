@@ -28,10 +28,23 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.lifecycleScope
+import data.AppDatabase
 import domain.QuestionProcessor
+import kotlinx.coroutines.launch
 
 class HotSeatActivity : androidx.activity.ComponentActivity() {
+    private lateinit var questionProcessor: QuestionProcessor
     override fun onCreate(savedInstanceState: Bundle?) {
+        val questionDao = AppDatabase.getDatabase(this).questionsDao()
+        questionProcessor = QuestionProcessor(
+            questionDao,
+            (1..15).random(),
+            (1..15).random()
+        )
+        lifecycleScope.launch {
+            questionProcessor.loadQuestion()
+        }
         super.onCreate(savedInstanceState)
         setContent {
             Scaffold(modifier = Modifier.fillMaxSize()) { outerPadding ->
@@ -39,10 +52,9 @@ class HotSeatActivity : androidx.activity.ComponentActivity() {
                     modifier = Modifier.padding(outerPadding)
                 )
                 HotSeatLayout(
-                    modifier = Modifier.padding(outerPadding)
+                    modifier = Modifier.padding(outerPadding),
+                    questionProcessor
                 )
-
-
             }
         }
     }
@@ -62,7 +74,7 @@ fun HotSeatBg(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun HotSeatLayout(modifier: Modifier = Modifier) {
+fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProcessor) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -85,7 +97,7 @@ fun HotSeatLayout(modifier: Modifier = Modifier) {
                         .align(Alignment.Center)
                 )
                 Text(
-                    text = "Otázka",
+                    text = questionProcessor.getQuestion()!!,
                     color = androidx.compose.ui.graphics.Color.White,
                     fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
                     fontSize = 24.sp,
@@ -125,6 +137,13 @@ fun HotSeatLayout(modifier: Modifier = Modifier) {
                     color = Color.White,
                     modifier = Modifier.align(Alignment.CenterStart).padding(start = 65.dp)
                 )
+                Text(
+                    text = questionProcessor.getAnswerA()!!,
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    modifier = Modifier.align(Alignment.Center)
+                )
             }
             Spacer(modifier = Modifier.height(25.dp))
             Box(
@@ -155,6 +174,13 @@ fun HotSeatLayout(modifier: Modifier = Modifier) {
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
                     modifier = Modifier.align(Alignment.CenterStart).padding(start = 65.dp)
+                )
+                Text(
+                    text = questionProcessor.getAnswerB()!!,
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    modifier = Modifier.align(Alignment.Center)
                 )
             }
             Spacer(modifier = Modifier.height(25.dp))
@@ -187,6 +213,13 @@ fun HotSeatLayout(modifier: Modifier = Modifier) {
                     color = Color.White,
                     modifier = Modifier.align(Alignment.CenterStart).padding(start = 65.dp)
                 )
+                Text(
+                    text = questionProcessor.getAnswerC()!!,
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    modifier = Modifier.align(Alignment.Center)
+                )
             }
             Spacer(modifier = Modifier.height(25.dp))
             Box(
@@ -217,6 +250,13 @@ fun HotSeatLayout(modifier: Modifier = Modifier) {
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
                     modifier = Modifier.align(Alignment.CenterStart).padding(start = 65.dp)
+                )
+                Text(
+                    text = questionProcessor.getAnswerD()!!,
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    modifier = Modifier.align(Alignment.Center)
                 )
             }
             Spacer(modifier = Modifier.height(15.dp))

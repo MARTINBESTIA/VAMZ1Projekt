@@ -33,10 +33,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.milionarsemestralka.ui.theme.MilionarSemestralkaTheme
+import data.AppDatabase
+import viewmodel.QuestionViewModel
 
 class StartActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val db = AppDatabase.getDatabase(this)
+        val questionViewModel = QuestionViewModel(application)
+        questionViewModel.insertAllQuestions()
         enableEdgeToEdge()
         setContent {
             MilionarSemestralkaTheme {
@@ -49,7 +54,7 @@ class StartActivity : ComponentActivity() {
                     Buttons(
                         modifier = Modifier.padding(outerPadding)
                     )
-                   HotSeatActivityTransition()
+
                 }
             }
         }
@@ -226,10 +231,5 @@ fun Buttons(modifier: Modifier = Modifier) {
     }
 }
 
-@Composable
-fun HotSeatActivityTransition() {
-    val context = LocalContext.current
-    val intent = Intent(context, HotSeatActivity::class.java)
-    context.startActivity(intent)
-}
+
 
