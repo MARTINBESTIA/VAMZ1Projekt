@@ -1,5 +1,6 @@
 package com.example.milionarsemestralka
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -57,11 +58,11 @@ class PrizeLadderActivity : androidx.activity.ComponentActivity() {
                     .padding(outerPadding)
                     .fillMaxSize()
                 )
-                EndGameDialog()
                 if (GameSessionController.stillInGame.value) {
                     MovingRectangleScreen()
                     GoToHotSeatActivity(LocalContext.current)
                 }
+                EndGameDialog()
             }
         }
     }
@@ -191,6 +192,7 @@ fun GoToHotSeatActivity(context: Context) {
         delay(5000) // Wait for 5 seconds
         val intent = Intent(context, HotSeatActivity::class.java)
         context.startActivity(intent)
+        (context as? Activity)?.finish()
     }
 }
 
@@ -198,13 +200,15 @@ fun GoToHotSeatActivity(context: Context) {
 fun EndGameDialog() {
     val isInGame = GameSessionController.stillInGame.value
     val context = LocalContext.current
-    val prizes = intArrayOf(500, 1000, 2000, 3000, 5000, 7500, 10000, 12500, 15000, 25000, 50000, 100000, 250000, 500000, 1000000)
+    val prizes = intArrayOf(0, 500, 1000, 2000, 3000, 5000, 7500, 10000, 12500, 15000, 25000, 50000, 100000, 250000, 500000, 1000000)
 
     if (!isInGame) {
         AlertDialog(
             onDismissRequest = {
+                GameSessionController.resetGame()
                 val intent = Intent(context, StartActivity::class.java)
                 context.startActivity(intent)
+                (context as? Activity)?.finish()
             },
             title = { Text(text = "You are the winner!") },
             text = {
@@ -212,8 +216,10 @@ fun EndGameDialog() {
             },
             confirmButton = {
                 Button(onClick = {
+                    GameSessionController.resetGame()
                     val intent = Intent(context, StartActivity::class.java)
                     context.startActivity(intent)
+                    (context as? Activity)?.finish()
                 }) {
                     Text("OK")
                 }

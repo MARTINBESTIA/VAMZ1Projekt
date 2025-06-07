@@ -1,5 +1,6 @@
 package com.example.milionarsemestralka
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -137,6 +138,7 @@ fun Buttons(modifier: Modifier = Modifier) {
                         onClick = {
                             val intent = Intent(context, PrizeLadderActivity::class.java)
                             context.startActivity(intent)
+                            (context as? Activity)?.finish()
                                   },
                         modifier = Modifier
                             .fillMaxWidth()

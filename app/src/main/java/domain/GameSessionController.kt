@@ -4,9 +4,9 @@ import androidx.compose.runtime.mutableStateOf
 
 object GameSessionController {
     var currentLevel: Int = 1
-    var isFiftyFiftyUsed: Boolean = false
-    var isAudienceHelpUsed: Boolean = false
-    var isStatisticsHelpUsed: Boolean = false
+    var isFiftyFiftyUsed = mutableStateOf(false)
+    var isAudienceHelpUsed = mutableStateOf(false)
+    var isStatisticsHelpUsed = mutableStateOf(false)
     var stillInGame = mutableStateOf(true)
         private set
 
@@ -15,15 +15,15 @@ object GameSessionController {
     }
 
     fun useFiftyFifty() {
-        isFiftyFiftyUsed = true
+        isFiftyFiftyUsed.value = true
     }
 
     fun useAudienceHelp() {
-        isAudienceHelpUsed = true
+        isAudienceHelpUsed.value = true
     }
 
     fun useStatisticsHelp() {
-        isStatisticsHelpUsed = true
+        isStatisticsHelpUsed.value = true
     }
 
     fun endGame() {
@@ -32,9 +32,9 @@ object GameSessionController {
 
     fun resetGame() {
         currentLevel = 1
-        isFiftyFiftyUsed = false
-        isAudienceHelpUsed = false
-        isStatisticsHelpUsed = false
+        isFiftyFiftyUsed.value = false
+        isAudienceHelpUsed.value = false
+        isStatisticsHelpUsed.value = false
         stillInGame.value = true
     }
 }
