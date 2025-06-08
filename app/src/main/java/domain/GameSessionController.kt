@@ -6,7 +6,7 @@ object GameSessionController {
     var currentLevel: Int = 1
     var isFiftyFiftyUsed = mutableStateOf(false)
     var isAudienceHelpUsed = mutableStateOf(false)
-    var isStatisticsHelpUsed = mutableStateOf(false)
+    var isHotlineHelpUsed = mutableStateOf(false)
     var stillInGame = mutableStateOf(true)
         private set
 
@@ -22,8 +22,8 @@ object GameSessionController {
         isAudienceHelpUsed.value = true
     }
 
-    fun useStatisticsHelp() {
-        isStatisticsHelpUsed.value = true
+    fun useHotlineHelp() {
+        isHotlineHelpUsed.value = true
     }
 
     fun endGame() {
@@ -34,7 +34,7 @@ object GameSessionController {
         currentLevel = 1
         isFiftyFiftyUsed.value = false
         isAudienceHelpUsed.value = false
-        isStatisticsHelpUsed.value = false
+        isHotlineHelpUsed.value = false
         stillInGame.value = true
     }
 }
