@@ -44,12 +44,17 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalDensity
+import data.SoundManager
 import domain.GameSessionController
 import kotlinx.coroutines.delay
 
 class PrizeLadderActivity : androidx.activity.ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        SoundManager.initialize(this)
+        if (GameSessionController.stillInGame.value) {
+            SoundManager.playLadderActivitySound()
+        }
         setContent {
             Scaffold(modifier = Modifier.fillMaxSize()) { outerPadding ->
             PrizeLadderBg(

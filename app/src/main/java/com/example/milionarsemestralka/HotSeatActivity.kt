@@ -44,18 +44,20 @@ import domain.GameSessionController
 import domain.QuestionProcessor
 import kotlinx.coroutines.launch
 import kotlin.random.Random
-
+import data.SoundManager
 
 class HotSeatActivity : androidx.activity.ComponentActivity() {
     private lateinit var questionProcessor: QuestionProcessor
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        SoundManager.initialize(this)
+        SoundManager.playHotSeatActivitySound()
         val questionDao = AppDatabase.getDatabase(this).questionsDao()
         questionProcessor = QuestionProcessor(
             questionDao,
             (1..15).random(),
             (1..15).random()
         )
-        super.onCreate(savedInstanceState)
         setContent {
             Scaffold(modifier = Modifier.fillMaxSize()) { outerPadding ->
                 HotSeatBg(
@@ -176,6 +178,7 @@ fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProc
         if (answered.value) return
         answered.value = true
         if (questionProcessorP == null) return
+        SoundManager.stopHotSeatActivitySound()
         if (answer == questionProcessorP.getCorrectAnswer()) {
             when (answer) {
                 'A' -> buttonColorA.value = ColorFilter.tint(Color.Green)
@@ -184,6 +187,7 @@ fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProc
                 'D' -> buttonColorD.value = ColorFilter.tint(Color.Green)
             }
             GameSessionController.nextLevel()
+            SoundManager.playCorrectAnswerSound()
         } else {
             when (questionProcessorP.getCorrectAnswer()) {
                 'A' -> buttonColorA.value = ColorFilter.tint(Color.Green)
@@ -198,6 +202,7 @@ fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProc
                 'D' -> buttonColorD.value = ColorFilter.tint(Color.Red)
             }
             GameSessionController.endGame()
+            SoundManager.playWrongAnswerSound()
         }
 
         // Delay then navigate

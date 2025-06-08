@@ -35,11 +35,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.milionarsemestralka.ui.theme.MilionarSemestralkaTheme
 import data.AppDatabase
+import data.SoundManager
 import viewmodel.QuestionViewModel
 
 class StartActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        SoundManager.initialize(this)
+        SoundManager.playStartActivitySound()
         val db = AppDatabase.getDatabase(this)
         val questionViewModel = QuestionViewModel(application)
         questionViewModel.insertAllQuestions()
@@ -136,6 +139,7 @@ fun Buttons(modifier: Modifier = Modifier) {
                 ) {
                     Button(
                         onClick = {
+                            SoundManager.stopStartActivitySound()
                             val intent = Intent(context, PrizeLadderActivity::class.java)
                             context.startActivity(intent)
                             (context as? Activity)?.finish()
