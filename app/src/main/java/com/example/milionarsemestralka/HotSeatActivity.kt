@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
@@ -42,6 +43,7 @@ import data.AppDatabase
 import domain.GameSessionController
 import domain.QuestionProcessor
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 
 class HotSeatActivity : androidx.activity.ComponentActivity() {
@@ -95,6 +97,7 @@ fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProc
     val buttonColorC = remember { mutableStateOf<ColorFilter?>(null) }
     val buttonColorD = remember { mutableStateOf<ColorFilter?>(null) }
     val button5050 = remember { mutableStateOf<ColorFilter?>(null) }
+    val audienceButton = remember { mutableStateOf<ColorFilter?>(null) }
 
     val buttonEnabledA = remember { mutableStateOf(true) }
     val buttonEnabledB = remember { mutableStateOf(true) }
@@ -105,11 +108,16 @@ fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProc
     val clickedAudienceButton = remember { mutableStateOf(false) }
     val clickedHotlineButton = remember { mutableStateOf(false) }
 
+    val showAudienceDialog = remember { mutableStateOf(false) }
+
     clicked5050.value = GameSessionController.isFiftyFiftyUsed.value
     if (clicked5050.value) {
         button5050.value = ColorFilter.tint(Color.Unspecified.copy(alpha = 0.3f))
     }
     clickedAudienceButton.value = GameSessionController.isAudienceHelpUsed.value
+    if (clickedAudienceButton.value) {
+        audienceButton.value = ColorFilter.tint(Color.Unspecified.copy(alpha = 0.3f))
+    }
     clickedHotlineButton.value = GameSessionController.isStatisticsHelpUsed.value
 
     buttonEnabledA.value = true
@@ -122,6 +130,13 @@ fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProc
     LaunchedEffect(Unit) {
         questionProcessor.loadQuestion()
         questionProcessorInit = questionProcessor
+    }
+
+    fun handleAudienceClick(answer: Char, questionProcessorP: QuestionProcessor?) {
+        if (answered.value || clickedAudienceButton.value) return
+        answered.value = true
+        if (questionProcessorP == null) return
+        audienceButton.value = ColorFilter.tint(Color.Unspecified.copy(alpha = 0.3f))
     }
 
     fun handle5050Click(answer: Char, questionProcessorP: QuestionProcessor?) {
@@ -409,13 +424,20 @@ fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProc
                     modifier = Modifier
                 ) {
                     Button(
-                        onClick = { /* handle click */ },
+                        onClick = {
+                            if (!answered.value && !clickedAudienceButton.value) {
+                                handleAudienceClick(questionProcessorInit?.getCorrectAnswer()!!, questionProcessorInit)
+                                clickedAudienceButton.value = true
+                                GameSessionController.useAudienceHelp()
+                                showAudienceDialog.value = true
+                            }},
                         modifier = Modifier
                             .padding(horizontal = 4.dp)
                             .scale(1.5f),
                         content = {
                             Image(
                                 painter = painterResource(R.drawable.audience),
+                                colorFilter = audienceButton.value,
                                 contentDescription = null,
                                 modifier = Modifier
                                     .padding(horizontal = 4.dp)
@@ -455,7 +477,7 @@ fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProc
                     modifier = Modifier
                 ) {
                     Button(
-                        onClick = { /* handle click */ },
+                        onClick = { handleAnswerClick('E', questionProcessorInit) },
                         modifier = Modifier
                             .padding(horizontal = 4.dp)
                             .scale(1.5f),
@@ -475,10 +497,73 @@ fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProc
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(15.dp))
+        }
+        Spacer(modifier = Modifier.height(15.dp))
+        if (showAudienceDialog.value) {
+            AudienceDialog(questionProcessorInit?.getCorrectAnswer()!!, { showAudienceDialog.value = false })
         }
     }
 }
 
 
+@Composable
+fun AudienceDialog(correctAnswer: Char, onDismiss: () -> Unit) {
+    val isInGame = GameSessionController.stillInGame.value
+    val percMeansToLevels = intArrayOf(75, 70, 65, 62, 59, 55, 53, 50, 48, 45, 40, 35, 33, 29, 25, 20)
+    val stdDev = 15
+    val winningProb = percMeansToLevels[GameSessionController.currentLevel - 1] + Random.nextInt(-stdDev, stdDev)
+    val probWrong1 = ((100 - winningProb) / 3) + Random.nextInt(-stdDev / 3, stdDev / 3)
+    val probWrong2 = ((100 - winningProb - probWrong1) / 2) + Random.nextInt(-stdDev / 5, stdDev / 5)
+    val probWrong3 = 100 - winningProb - probWrong1 - probWrong2
+    var finalString = ""
+        when (correctAnswer) {
+            'A' -> finalString = """
+                A: $winningProb %
+                B: $probWrong1 %
+                C: $probWrong2 %
+                D: $probWrong3 %
+                
+            """.trimIndent()
+            'B' -> finalString = """
+                A: $probWrong1 %
+                B: $winningProb %
+                C: $probWrong2 %
+                D: $probWrong3 %
+                
+            """.trimIndent()
+            'C' -> finalString = """
+                A: $probWrong1 %
+                B: $probWrong2 %
+                C: $winningProb %
+                D: $probWrong3 %
+                
+            """.trimIndent()
+            'D' -> finalString = """
+                A: $probWrong1 %
+                B: $probWrong2 %
+                C: $probWrong3 %
+                D: $winningProb %
+                
+            """.trimIndent()
+            else -> "Voting got broken whoops"
+        }
 
+        if (isInGame) {
+        AlertDialog(
+            onDismissRequest = {
+                onDismiss()
+            },
+            title = { Text(text = "Results of voting") },
+            text = {
+                Text( text = finalString)
+            },
+            confirmButton = {
+                Button(onClick = {
+                    onDismiss()
+                }) {
+                    Text("OK")
+                }
+            }
+        )
+    }
+}
