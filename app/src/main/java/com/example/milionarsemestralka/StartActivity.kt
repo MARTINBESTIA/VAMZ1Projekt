@@ -70,7 +70,6 @@ class StartActivity : ComponentActivity() {
             }
         }
     }
-
     override fun onPause() {
         super.onPause()
         SoundManager.pauseStartActivitySound()
@@ -201,7 +200,7 @@ fun Buttons(modifier: Modifier = Modifier) {
                 Box (
                     modifier = Modifier
                 ) {
-                    Button(
+                    Button( // https://stackoverflow.com/questions/77417214/how-to-add-an-image-to-a-button-in-jetpack-compose-kotlin
                         onClick = { System.exit(0) },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -247,7 +246,7 @@ fun VolumeDialog(onDismiss: () -> Unit) {
         text = {
             Column {
                 Text("Music Volume: %.0f%%".format(musicVolume.value * 100))
-                Slider(
+                Slider( // chatgpt
                     value = musicVolume.value,
                     onValueChange = {
                         musicVolume.value = it

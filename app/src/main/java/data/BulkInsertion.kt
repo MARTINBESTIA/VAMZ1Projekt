@@ -7,7 +7,7 @@ class BulkInsertion(application: android.app.Application) : androidx.lifecycle.A
 
     private val db = AppDatabase.getDatabase(application)
 
-    public fun insertAllQuestions() {
+    fun insertAllQuestions() {
         viewModelScope.launch {
             val count = db.questionsDao().getQuestionCount()
             if (count == 0) {
@@ -18,6 +18,7 @@ class BulkInsertion(application: android.app.Application) : androidx.lifecycle.A
 
     private fun allQuestions(): List<Questions> {
         return listOf(
+            // Vsetky otazky som urcite som nerobil, robilo to chatGPT
             // History sector (sector = 1)
             // Difficulty 1-10
             Questions(question = "Who was the first President of the United States?", answerA = "George Washington", answerB = "Thomas Jefferson", answerC = "Abraham Lincoln", answerD = "John Adams", difficulty = 1, correctAnswer = 'A', sector = 1, alreadyShowed = false),

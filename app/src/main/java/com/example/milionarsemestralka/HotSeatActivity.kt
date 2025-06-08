@@ -102,7 +102,7 @@ fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProc
     var questionProcessorInit by remember { mutableStateOf<QuestionProcessor?>(null) }
     val answered = remember { mutableStateOf(false) }
 
-    val buttonColorA = remember { mutableStateOf<ColorFilter?>(null) }
+    val buttonColorA = remember { mutableStateOf<ColorFilter?>(null) } // https://developer.android.com/develop/ui/compose/graphics/images/customize
     val buttonColorB = remember { mutableStateOf<ColorFilter?>(null) }
     val buttonColorC = remember { mutableStateOf<ColorFilter?>(null) }
     val buttonColorD = remember { mutableStateOf<ColorFilter?>(null) }
@@ -141,7 +141,7 @@ fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProc
     buttonEnabledD.value = true
     answered.value = false
 
-    val scope = rememberCoroutineScope()
+    val scope = rememberCoroutineScope() // toto tu doporucilo AI
     LaunchedEffect(Unit) {
         questionProcessor.loadQuestion()
         questionProcessorInit = questionProcessor
@@ -343,7 +343,7 @@ fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProc
                 modifier = Modifier
             ) {
                 Button(
-                    onClick = { handleAnswerClick('C', questionProcessorInit) },
+                    onClick = { handleAnswerClick('C', questionProcessorInit) }, // https://stackoverflow.com/questions/77417214/how-to-add-an-image-to-a-button-in-jetpack-compose-kotlin
                     enabled = buttonEnabledC.value && !answered.value,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -385,7 +385,7 @@ fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProc
                 modifier = Modifier
             ) {
                 Button(
-                    onClick = { handleAnswerClick('D', questionProcessorInit) },
+                    onClick = { handleAnswerClick('D', questionProcessorInit) }, // https://stackoverflow.com/questions/77417214/how-to-add-an-image-to-a-button-in-jetpack-compose-kotlin
                     enabled = buttonEnabledD.value && !answered.value,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -547,7 +547,7 @@ fun HotSeatLayout(modifier: Modifier = Modifier, questionProcessor: QuestionProc
 }
 
 @Composable
-fun HotlineDialog(correctAnswer: Char, onDismiss: () -> Unit) {
+fun HotlineDialog(correctAnswer: Char, onDismiss: () -> Unit) { // onDismiss spôsob trigerovania recomoposu doporucilo AI
     val isInGame = GameSessionController.stillInGame.value
     val responses = listOf("Oh yeah, that is super easy, its obviously answer: ",
                             "Hmm, I am not 100% sure, but it should be answer: ",
@@ -578,7 +578,7 @@ fun HotlineDialog(correctAnswer: Char, onDismiss: () -> Unit) {
     }
 
     if (isInGame) {
-        AlertDialog(
+        AlertDialog( // AlertDilaog component doporucilo AI
             onDismissRequest = {
                 onDismiss()
             },

@@ -154,7 +154,7 @@ fun MovingRectangleScreen() {
     val offsetY = remember { Animatable(0f) }
     val alphaAnim = remember { Animatable(0f) }
 
-    LaunchedEffect(currentLevel, screenHeightPx) {
+    LaunchedEffect(currentLevel, screenHeightPx) { // s animaciami pomahal chatgpt
         offsetY.animateTo(
             targetValue = targetY,
             animationSpec = tween(durationMillis = 1000, easing = LinearOutSlowInEasing)
@@ -176,7 +176,7 @@ fun MovingRectangleScreen() {
                 .offset { IntOffset(0, offsetY.value.toInt()) }
                 .alpha(alphaAnim.value)
                 .background(Color.Yellow)
-                .border(2.dp, Color.Red) // for debugging
+                .border(2.dp, Color.Red)
                 .shadow(
                     elevation = 10.dp,
                     shape = RoundedCornerShape(50.dp),
@@ -190,11 +190,11 @@ fun MovingRectangleScreen() {
 
 @Composable
 fun GoToHotSeatActivity(context: Context) {
-    LaunchedEffect(Unit) {
-        delay(5000) // Wait for 5 seconds
+    LaunchedEffect(Unit) { // s animaciami pomahal chatgpt
+        delay(5000)
         val intent = Intent(context, HotSeatActivity::class.java)
         context.startActivity(intent)
-        (context as? Activity)?.finish()
+        (context as? Activity)?.finish() // chatgpt error fix
     }
 }
 
