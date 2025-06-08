@@ -18,11 +18,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -103,6 +110,7 @@ fun LogoImage(modifier: Modifier = Modifier) {
 
 @Composable
 fun Buttons(modifier: Modifier = Modifier) {
+    var showDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val buttonImage = painterResource(R.drawable.menubutton)
     val logoImage = painterResource(R.drawable.logo)
@@ -175,7 +183,7 @@ fun Buttons(modifier: Modifier = Modifier) {
                     modifier = Modifier
                 ) {
                     Button(
-                        onClick = { /* handle click */ },
+                        onClick = { showDialog = true },
                         modifier = Modifier
                             .fillMaxWidth()
                             .scale(1.5f),
@@ -235,6 +243,49 @@ fun Buttons(modifier: Modifier = Modifier) {
             }
         }
     }
+    if (showDialog) {
+        VolumeDialog(onDismiss = { showDialog = false })
+    }
+}
+
+@Composable
+fun VolumeDialog(onDismiss: () -> Unit) {
+    val musicVolume = remember { mutableStateOf(SoundManager.musicVolume) }
+    val soundVolume = remember { mutableStateOf(SoundManager.soundVolume) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Adjust Volume") },
+        text = {
+            Column {
+                Text("Music Volume: %.0f%%".format(musicVolume.value * 100))
+                Slider(
+                    value = musicVolume.value,
+                    onValueChange = {
+                        musicVolume.value = it
+                        SoundManager.musicVolume = it
+                        SoundManager.startActivityMusic?.setVolume(it, it)
+                    },
+                    valueRange = 0f..1f
+                )
+                Text("Sound Volume: %.0f%%".format(soundVolume.value * 100))
+                Slider(
+                    value = soundVolume.value,
+                    onValueChange = {
+                        soundVolume.value = it
+                        SoundManager.soundVolume = it
+
+                    },
+                    valueRange = 0f..1f
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Done")
+            }
+        }
+    )
 }
 
 

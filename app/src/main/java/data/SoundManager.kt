@@ -6,6 +6,8 @@ import android.media.SoundPool
 import com.example.milionarsemestralka.R
 
 object SoundManager {
+    var musicVolume = 0.5f
+    var soundVolume = 0.5f
     val ladderActivitySound = SoundPool.Builder().setMaxStreams(1).build()
     val correctAnswerSound = SoundPool.Builder().setMaxStreams(1).build()
     val wrongAnswerSound = SoundPool.Builder().setMaxStreams(1).build()
@@ -21,20 +23,18 @@ object SoundManager {
     }
 
     fun playLadderActivitySound() {
-        ladderActivitySound.play(1, 1f, 1f, 0, 0, 1f)
+        ladderActivitySound.play(1, soundVolume, soundVolume, 0, 0, 1f)
     }
     fun playCorrectAnswerSound() {
-        correctAnswerSound.play(1, 1f, 1f, 0, 0, 1f)
+        correctAnswerSound.play(1, soundVolume, soundVolume, 0, 0, 1f)
     }
     fun playWrongAnswerSound() {
-        wrongAnswerSound.play(1, 1f, 1f, 0, 0, 1f)
+        wrongAnswerSound.play(1, soundVolume, soundVolume, 0, 0, 1f)
     }
     fun playStartActivitySound() {
         startActivityMusic?.isLooping = true
+        startActivityMusic?.setVolume(musicVolume, musicVolume)
         startActivityMusic?.start()
-    }
-    fun pauseStartActivitySound() {
-        startActivityMusic?.pause()
     }
     fun stopStartActivitySound() {
         startActivityMusic?.stop()
@@ -42,15 +42,14 @@ object SoundManager {
     }
     fun playHotSeatActivitySound() {
         hotSeatActivityMusic?.isLooping = true
+        hotSeatActivityMusic?.setVolume(musicVolume, musicVolume)
         hotSeatActivityMusic?.start()
-    }
-    fun pauseHotSeatActivitySound() {
-        hotSeatActivityMusic?.pause()
     }
     fun stopHotSeatActivitySound() {
         hotSeatActivityMusic?.stop()
         hotSeatActivityMusic?.release()
     }
+
 
 
 }
