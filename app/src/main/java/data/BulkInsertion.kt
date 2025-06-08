@@ -1,14 +1,9 @@
-package viewmodel
+package data
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import data.AppDatabase
-import data.QuestionDao
-import data.Questions
 import kotlinx.coroutines.launch
 
-class QuestionViewModel(application: Application) : AndroidViewModel(application){
+class BulkInsertion(application: android.app.Application) : androidx.lifecycle.AndroidViewModel(application){
 
     private val db = AppDatabase.getDatabase(application)
 

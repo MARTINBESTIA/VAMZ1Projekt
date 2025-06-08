@@ -7,7 +7,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -43,7 +42,7 @@ import androidx.compose.ui.unit.sp
 import com.example.milionarsemestralka.ui.theme.MilionarSemestralkaTheme
 import data.AppDatabase
 import data.SoundManager
-import viewmodel.QuestionViewModel
+import data.BulkInsertion
 
 class StartActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,8 +50,8 @@ class StartActivity : ComponentActivity() {
         SoundManager.initialize(this)
         SoundManager.playStartActivitySound()
         val db = AppDatabase.getDatabase(this)
-        val questionViewModel = QuestionViewModel(application)
-        questionViewModel.insertAllQuestions()
+        val bulkInsertion = BulkInsertion(application)
+        bulkInsertion.insertAllQuestions()
         enableEdgeToEdge()
         setContent {
             MilionarSemestralkaTheme {
@@ -86,27 +85,6 @@ fun BackgroundImage(modifier: Modifier = Modifier) {
 
     )
 }
-
-@Composable
-fun LogoImage(modifier: Modifier = Modifier) {
-    val logoImage = painterResource(R.drawable.logo)
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center
-
-    ) {
-        Image(
-            painter = logoImage,
-            contentDescription = null,
-            modifier = Modifier
-                .fillMaxWidth(1f)
-                .aspectRatio(16f / 9f) // chatgpt modifier
-        )
-    }
-}
-
 
 @Composable
 fun Buttons(modifier: Modifier = Modifier) {
