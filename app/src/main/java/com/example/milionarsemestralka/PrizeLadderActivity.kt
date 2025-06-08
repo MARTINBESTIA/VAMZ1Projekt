@@ -10,6 +10,7 @@ import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
@@ -142,41 +143,35 @@ fun MovingRectangleScreen() {
     val density = LocalDensity.current
     val screenHeightPx = with(density) { configuration.screenHeightDp.dp.toPx() }
 
-    val offsetX = remember { Animatable(0f) }
-    val offsetY = remember { Animatable(screenHeightPx - screenHeightPx * ((GameSessionController.currentLevel - 1) / 15f) - 160)}
+    val currentLevel = GameSessionController.currentLevel.coerceIn(1, 15)
+    val targetY = screenHeightPx * (1f - (currentLevel - 1) / 14f) - 160f
+
+    val offsetY = remember { Animatable(0f) }
     val alphaAnim = remember { Animatable(0f) }
 
-    LaunchedEffect(screenHeightPx) {
-
+    LaunchedEffect(currentLevel, screenHeightPx) {
         offsetY.animateTo(
-            targetValue = -(screenHeightPx * (GameSessionController.currentLevel / 15f) - 160),
+            targetValue = targetY,
             animationSpec = tween(durationMillis = 1000, easing = LinearOutSlowInEasing)
         )
 
         repeat(3) {
-            alphaAnim.animateTo(
-                targetValue = 0.1f,
-                animationSpec = tween(durationMillis = 500)
-            )
-            alphaAnim.animateTo(
-                targetValue = 0.5f,
-                animationSpec = tween(durationMillis = 500)
-            )
+            alphaAnim.animateTo(0.1f, animationSpec = tween(500))
+            alphaAnim.animateTo(0.5f, animationSpec = tween(500))
         }
-
     }
+
     Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        modifier = Modifier.fillMaxSize()
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(80.dp)
+                .offset { IntOffset(0, offsetY.value.toInt()) }
                 .alpha(alphaAnim.value)
-                .align(Alignment.BottomCenter)
-                .offset { IntOffset(offsetX.value.toInt(), offsetY.value.toInt()) }
                 .background(Color.Yellow)
+                .border(2.dp, Color.Red) // for debugging
                 .shadow(
                     elevation = 10.dp,
                     shape = RoundedCornerShape(50.dp),
@@ -185,6 +180,8 @@ fun MovingRectangleScreen() {
         )
     }
 }
+
+
 
 @Composable
 fun GoToHotSeatActivity(context: Context) {
