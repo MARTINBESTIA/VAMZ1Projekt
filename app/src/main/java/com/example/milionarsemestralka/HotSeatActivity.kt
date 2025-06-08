@@ -70,6 +70,14 @@ class HotSeatActivity : androidx.activity.ComponentActivity() {
             }
         }
     }
+    override fun onPause() {
+        super.onPause()
+        SoundManager.pauseHotSeatActivitySound()
+    }
+    override fun onResume() {
+        super.onResume()
+        SoundManager.resumeHotSeatActivitySound()
+    }
 }
 
 @Composable

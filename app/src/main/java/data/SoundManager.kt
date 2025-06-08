@@ -39,6 +39,7 @@ object SoundManager {
     fun stopStartActivitySound() {
         startActivityMusic?.stop()
         startActivityMusic?.release()
+        startActivityMusic = null
     }
     fun playHotSeatActivitySound() {
         hotSeatActivityMusic?.isLooping = true
@@ -48,8 +49,22 @@ object SoundManager {
     fun stopHotSeatActivitySound() {
         hotSeatActivityMusic?.stop()
         hotSeatActivityMusic?.release()
+        hotSeatActivityMusic = null
     }
-
-
-
+    fun pauseHotSeatActivitySound() {
+        hotSeatActivityMusic?.pause()
+    }
+    fun resumeHotSeatActivitySound() {
+        if (hotSeatActivityMusic != null && !hotSeatActivityMusic!!.isPlaying) {
+            hotSeatActivityMusic?.start()
+        }
+    }
+    fun pauseStartActivitySound() {
+        startActivityMusic?.pause()
+    }
+    fun resumeStartActivitySound() {
+        if (startActivityMusic != null && !startActivityMusic!!.isPlaying) {
+            startActivityMusic?.start()
+        }
+    }
 }

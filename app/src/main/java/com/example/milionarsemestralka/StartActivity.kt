@@ -2,6 +2,7 @@ package com.example.milionarsemestralka
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -68,6 +69,15 @@ class StartActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        SoundManager.pauseStartActivitySound()
+    }
+    override fun onResume() {
+        super.onResume()
+        SoundManager.resumeStartActivitySound()
     }
 }
 
